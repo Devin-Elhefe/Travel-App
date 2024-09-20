@@ -43,18 +43,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.get('/', async (req, res) => {
-//   try {
-    
-//     const destinations = await Destination.find();
-//     // Pass the destinations to the template
-//     res.render('index.ejs', { destinations });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send('Server error');
-//   }
-// });
-
 
 app.use('/trips', tripsController);
 app.use('/wishlist', wishlistController);
@@ -64,13 +52,13 @@ app.get('/', async (req, res) => {
     let trips = [];
     let wishlists = [];
 
-    // Check if the user is logged in and fetch their trips
+  
     if (req.session.user) {
       trips = await Trip.find({ user_id: req.session.user._id });
       wishlists = await Wishlist.find({ user_id: req.session.user._id });
     }
 
-    // Render the homepage and pass the trips
+    
     res.render('index', { user: req.session.user, trips, wishlists });
   } catch (error) {
     console.log(error);

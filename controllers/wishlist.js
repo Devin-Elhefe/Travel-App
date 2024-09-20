@@ -16,43 +16,43 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Route to display the form to add a wishlist item
+
 router.get('/new', (req, res) => {
   if (!req.session.user) {
-    return res.redirect('/auth/login'); // Redirect to login if not logged in
+    return res.redirect('/auth/login'); 
   }
-  res.render('new_wishlist'); // Render the form to add a new wishlist item
+  res.render('new_wishlist'); 
 });
 
-// Route to add a new wishlist item
+
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    // Ensure the user is logged in
+    
     if (!req.session.user) {
       return res.redirect('/auth/login');
     }
 
-    // Create a new wishlist item with the uploaded image (if available)
+    
     const newWishlist = new Wishlist({
       user_id: req.session.user._id,
       location: req.body.location,
       description: req.body.description,
-      image_url: req.file ? `/uploads/${req.file.filename}` : null // Store uploaded file path
+      image_url: req.file ? `/uploads/${req.file.filename}` : null 
     });
 
     await newWishlist.save();
-    res.redirect('/'); // Redirect to homepage after adding the wishlist item
+    res.redirect('/'); 
   } catch (err) {
     console.error('Error adding wishlist:', err);
     res.status(500).send('Error adding wishlist');
   }
 });
-// Route to delete a wishlist item
+
 router.delete('/:id', async (req, res) => {
     try {
-      // Find and delete the wishlist item by ID
+      
       await Wishlist.findByIdAndDelete(req.params.id);
-      res.redirect('/'); // Redirect to the homepage after deletion
+      res.redirect('/'); 
     } catch (err) {
       console.error('Error deleting wishlist item:', err);
       res.status(500).send('Error deleting wishlist item');
