@@ -1,0 +1,14 @@
+<nav>
+    <div class="nav-left">
+      <a href="/trips/new">Add Trip</a>
+      <a href="/wishlist/new">Add Wishlist</a>
+    </div>
+    <div class="nav-right">
+      <% if (!user) { %>
+        <a href="/auth/login">Log In</a>
+        <a href="/auth/register">Register</a>
+      <% } else { %>
+        <a href="/auth/logout">Log Out</a>
+      <% } %>
+    </div>
+  </nav>

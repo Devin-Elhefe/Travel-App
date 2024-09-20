@@ -3,21 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>Home Page</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
-  <% if (user) { %>
-    <h1>Welcome to the app, <%= user.username %>!</h1>
-    <p>
-      <a href="/auth/sign-out">Sign out</a>
-    </p>
-  <% } else { %>
-    <h1>Welcome to the app, guest.</h1>
-    <p>
-      <a href="/auth/sign-up">Sign up</a> or
-      <a href="/auth/sign-in">Sign in</a>.
-    </p>
-  <% } %>
-  <p><a href="/vip-lounge">Get into the VIP Users Only lounge!</a></p>
-</body>
+  <%- include('partials/_navbar.ejs') %>
+    <h1>My Travel App</h1>
+  
+    <% if (!user) { %>
+      <!-- Display this content when the user is not logged in -->
+      <p>Please log in or create an account to view your trips.</p>
+    <% } else { %>
+      <!-- Display this content when the user is logged in -->
+      <h2>You're going places!</h2>
+  
+      <% if (trips.length > 0) { %>
+        <section>
+          <h2>My Trips</h2>
+          <ul>
+            <% trips.forEach(trip => { %>
+              <li>
+                <strong><%= trip.location %></strong>
+                <p><%= trip.description %></p>
+                <img src="<%= trip.image_url %>" alt="<%= trip.location %>" width="200px">
+      
+                <form action="/trips/<%= trip._id %>?_method=DELETE" method="POST">
+                  <button type="submit">Delete Trip</button>
+                <form action="/trips/<%= trip._id %>/edit" method="GET">
+                  <button type="submit">Edit Trip</button>
+                </form>
+              </li>
+            <% }) %>
+          </ul>
+        </section>
+      <% } else { %>
+        <p>No trips added yet. Start by adding a new trip!</p>
+      <% } %>
+
+      <% if (wishlists.length > 0) { %>
+        <section>
+          <h2>Wishlists</h2>
+          <ul>
+            <% wishlists.forEach(wishlist => { %>
+              <li>
+                <strong><%= wishlist.location %></strong>
+                <p><%= wishlist.description %></p>
+                <img src="<%= wishlist.image_url %>" alt="<%= wishlist.location %>" width="200px">
+      
+                <!-- Delete Button -->
+                <form action="/wishlist/<%= wishlist._id %>?_method=DELETE" method="POST">
+                  <button type="submit">Delete Wishlist</button>
+                </form>
+              </li>
+            <% }) %>
+          </ul>
+        </section>
+      <% } else { %>
+        <p>No wishlists added yet. Start by adding a new wishlist item!</p>
+      <% } %>
+    <% } %>
+  </body>
 </html>

@@ -4,20 +4,23 @@ const bcrypt = require('bcrypt');
 
 const User = require('../models/user.js');
 
-router.get('/sign-up', (req, res) => {
-  res.render('auth/sign-up.ejs');
-});
+router.get('/register', (req, res) => {
+  res.render('register.ejs');
+})
+router.get('/login', (req, res) => {
+  res.render('login.ejs');
+})
+router.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.redirect('/');
+    }
+    res.clearCookie('connect.sid');
+    res.redirect('/');
+  });
+})
 
-router.get('/sign-in', (req, res) => {
-  res.render('auth/sign-in.ejs');
-});
-
-router.get('/sign-out', (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
-});
-
-router.post('/sign-up', async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
     // Check if the username is already taken
     const userInDatabase = await User.findOne({ username: req.body.username });
@@ -38,19 +41,20 @@ router.post('/sign-up', async (req, res) => {
     // All ready to create the new user!
     await User.create(req.body);
   
-    res.redirect('/auth/sign-in');
+    res.redirect('/auth/login');
   } catch (error) {
     console.log(error);
     res.redirect('/');
   }
 });
 
-router.post('/sign-in', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
+    console.log(req.body);
     // First, get the user from the database
-    const userInDatabase = await User.findOne({ username: req.body.username });
+    const userInDatabase = await User.findOne({ email: req.body.email });
     if (!userInDatabase) {
-      return res.send('Login failed. Please try again.');
+      return res.send('Login failed. No user.');
     }
   
     // There is a user! Time to test their password with bcrypt
@@ -58,6 +62,7 @@ router.post('/sign-in', async (req, res) => {
       req.body.password,
       userInDatabase.password
     );
+    console.log(validPassword)
     if (!validPassword) {
       return res.send('Login failed. Please try again.');
     }
