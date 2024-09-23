@@ -12,7 +12,12 @@ The user can add trips to two categories: “My Trips” (places they have alrea
 For places they have visited, they can enter details about their visit, such as the date and notes, and they will also be able to add pictures.
 Any places they have not been able to visit yet, they will place in the “Wishlist”.
 
-**App link:**
+**Trello:** https://trello.com/b/VZfgWr7C/my-travel-app
+
+**App link:** 
+
+
+
 
 
 **Technologies Used:** Javascript/CSS/EJS/Session-based authentication
